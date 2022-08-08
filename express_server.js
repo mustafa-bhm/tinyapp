@@ -14,6 +14,7 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 app.get("/hello", (req, res) => {
+  res.status(404);
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
