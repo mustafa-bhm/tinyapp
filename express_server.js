@@ -46,15 +46,31 @@ app.get("/urls/:id", (req, res) => {
 
 /// Post request & add new id + long url to urlDatabase & redirect to :id
 app.post("/urls", (req, res) => {
-  // Log the POST request body to the console
   let id = generateRandomString();
   let longUrl = req.body.longURL;
   urlDatabase[id] = longUrl;
 
-  console.log(urlDatabase);
-  res.redirect("/urls/:id"); // should to /urls/:id. with the new created id
+  res.redirect(`/urls/${id}`); // should redirect to /urls/:id. with the new created id
 });
 
+// to redirect from Short url to long url
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id];
+
+  if (longURL) {
+    res.redirect(longURL);
+  } else {
+    res.statusCode = 404;
+    res.send("<h2>404 Not Found<br>This short URL does not exist.</h2>");
+  }
+});
+/// POST route to remove url
+app.post("/urls/:id/delete", (req, res) => {
+  delete urlDatabase[req.params.id];
+  res.redirect(`/urls`);
+});
+
+/// to listen for the port
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
