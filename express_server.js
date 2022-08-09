@@ -70,6 +70,12 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect(`/urls`);
 });
 
+/// to Update Urls and redirect to urls page
+app.post("/urls/:id/update", (req, res) => {
+  urlDatabase[req.params.id] = req.body.newLongURL;
+  res.redirect("/urls");
+});
+
 /// to listen for the port
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
