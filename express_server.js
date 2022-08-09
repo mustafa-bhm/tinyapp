@@ -4,7 +4,14 @@ const PORT = 8080; // default port 8080
 app.set("view engine", "ejs"); // setting up ejs as the view engine.
 app.use(express.urlencoded({ extended: true }));
 
-function generateRandomString() {}
+function generateRandomString() {
+  let char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let randomStr = "";
+  for (let i = 0; i < 6; i++) {
+    randomStr += char[Math.floor(Math.random() * char.length)];
+  }
+  return randomStr;
+}
 
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
@@ -37,10 +44,15 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-/// Post request
+/// Post request & add new id + long url to urlDatabase & redirect to :id
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok'
+  // Log the POST request body to the console
+  let id = generateRandomString();
+  let longUrl = req.body.longURL;
+  urlDatabase[id] = longUrl;
+
+  console.log(urlDatabase);
+  res.redirect("/urls/:id"); // should to /urls/:id. with the new created id
 });
 
 app.listen(PORT, () => {
