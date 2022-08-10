@@ -154,6 +154,11 @@ app.post("/register", (req, res) => {
   res.redirect("/urls/");
 });
 
+//// GET login
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
 /// to listen for the port
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

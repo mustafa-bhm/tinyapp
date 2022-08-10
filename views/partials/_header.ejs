@@ -24,14 +24,21 @@
       <button type="submit" class="btn btn-light">logout</button>
     </form>
     <% } else { %>
-    <form method="post" action="/login" class="form-inline">
-      <input
-        type="text"
-        name="username"
-        placeholder="username"
-        class="form-control"
-      />
-      <button type="login" class="btn btn-primary">Login</button>
+    <form method="POST" action="/login">
+      <a
+        href="/login"
+        class="btn btn-success"
+        role="button"
+        aria-disabled="true"
+        >Login</a
+      >
+      <a
+        href="/register"
+        class="btn btn-success"
+        role="button"
+        aria-disabled="true"
+        >Register</a
+      >
     </form>
     <% } %>
   </nav>
