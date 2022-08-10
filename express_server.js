@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const cookieParser = require("cookie-parser");
 app.set("view engine", "ejs"); // setting up ejs as the view engine.
 app.use(express.urlencoded({ extended: true }));
 
@@ -49,7 +50,6 @@ app.post("/urls", (req, res) => {
   let id = generateRandomString();
   let longUrl = req.body.longURL;
   urlDatabase[id] = longUrl;
-
   res.redirect(`/urls/${id}`); // should redirect to /urls/:id. with the new created id
 });
 
@@ -73,6 +73,13 @@ app.post("/urls/:id/delete", (req, res) => {
 /// to Update Urls and redirect to urls page
 app.post("/urls/:id/update", (req, res) => {
   urlDatabase[req.params.id] = req.body.newLongURL;
+  res.redirect("/urls");
+});
+
+//// POST for login
+app.post("/login", (req, res) => {
+  const username = req.body.username;
+  res.cookie("username", username);
   res.redirect("/urls");
 });
 
