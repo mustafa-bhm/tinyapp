@@ -102,6 +102,11 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 });
 
+/// TO GET the registration page
+app.get("/register", (req, res) => {
+  res.render("registration");
+});
+
 /// to listen for the port
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
