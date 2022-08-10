@@ -2,8 +2,11 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require("cookie-parser");
-app.set("view engine", "ejs"); // setting up ejs as the view engine.
+
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
+app.set("view engine", "ejs");
 
 function generateRandomString() {
   let char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -27,12 +30,19 @@ app.get("/urls.json", (req, res) => {
 });
 /// Route for urls_index
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = {
+    username: req.cookies["username"],
+    urls: urlDatabase,
+  };
   res.render("urls_index", templateVars);
 });
 /// GET Route to Show the Form
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = {
+    username: req.cookies["username"],
+    urls: urlDatabase,
+  };
+  res.render("urls_new", templateVars);
 });
 
 /// Route for urls_show
@@ -40,6 +50,8 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = {
     id: req.params.id,
     longURL: urlDatabase[req.params.id],
+    username: req.cookies["username"],
+    urls: urlDatabase,
   };
 
   res.render("urls_show", templateVars);
@@ -80,6 +92,13 @@ app.post("/urls/:id/update", (req, res) => {
 app.post("/login", (req, res) => {
   const username = req.body.username;
   res.cookie("username", username);
+  res.redirect("/urls");
+});
+
+/// to logout & clear username
+app.post("/logout", (req, res) => {
+  const username = req.body.username;
+  res.clearCookie("username");
   res.redirect("/urls");
 });
 

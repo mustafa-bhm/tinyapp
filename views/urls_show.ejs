@@ -21,9 +21,16 @@
       </div>
 
       <div class="card-footer text-muted">
+        <h3>Edit</h3>
         <form method="POST" action="/urls/<%= id %>/update">
-          <input type="text" name="newLongURL" value="<%= longURL %>" />
-          <button type="submit" class="btn btn-outline-primary">Edit</button>
+          <input
+            type="text"
+            name="newLongURL"
+            value="<%= longURL %>"
+            style="width: 300px; height: 2.3em; margin: 1em"
+          />
+
+          <button type="submit" class="btn btn-outline-primary">Submit</button>
         </form>
       </div>
 
