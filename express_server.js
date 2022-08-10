@@ -7,6 +7,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
+//// helper functions /////
 
 function generateRandomString() {
   let char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -16,11 +17,19 @@ function generateRandomString() {
   }
   return randomStr;
 }
-
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
 };
+const searchByEmail = (email, users) => {
+  for (const userId in users) {
+    if (users[userId].email === email) {
+      return users[userId];
+    }
+  }
+  return null;
+};
+
 const users = {
   userRandomID: {
     id: "userRandomID",
@@ -123,14 +132,23 @@ app.get("/register", (req, res) => {
 /// handling POST req when submitting the reg form
 
 app.post("/register", (req, res) => {
-  const id = generateRandomString();
   const email = req.body.email;
   const password = req.body.password;
+  const checkIfEmailExist = searchByEmail(email, users);
+  if (email === "" || password === "") {
+    return res.status(400).send("Error: Please enter email & password ");
+  }
+  if (checkIfEmailExist) {
+    return res.status(400).send(`Error: this email: ${email} already exists`);
+  }
+  const id = generateRandomString();
+
   users[id] = {
     id,
     email,
     password,
   };
+
   res.cookie("user_id", id);
 
   res.redirect("/urls/");
