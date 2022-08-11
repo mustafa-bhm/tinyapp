@@ -133,6 +133,9 @@ app.post("/logout", (req, res) => {
 
 /// TO GET the registration page
 app.get("/register", (req, res) => {
+  if (req.cookies["user_id"]) {
+    return res.redirect("/urls");
+  }
   const templateVars = {};
   res.render("registration", templateVars);
 });
@@ -164,6 +167,9 @@ app.post("/register", (req, res) => {
 
 //// GET login
 app.get("/login", (req, res) => {
+  if (req.cookies["user_id"]) {
+    return res.redirect("/urls");
+  }
   res.render("login");
 });
 
