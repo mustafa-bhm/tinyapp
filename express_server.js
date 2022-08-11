@@ -50,13 +50,12 @@ let users = {
   },
 };
 /// function to find urls for each user
-const userURLS = (id) => {
-  let urls = [];
+const urlsForUser = (id) => {
+  let urls = {};
 
   for (let shortURL in urlDatabase) {
     if (urlDatabase[shortURL].userID === id) {
-      urls[id] = {
-        shortURL: shortURL,
+      urls[shortURL] = {
         longURL: urlDatabase[shortURL].longURL,
       };
     }
@@ -77,10 +76,10 @@ app.get("/urls", (req, res) => {
   }
   const user = users[req.cookies.user_id];
   const templateVars = {
-    urls: urlDatabase,
-    user: users[user],
+    urls: urlsForUser(req.cookies["user_id"]),
+    user,
   };
-  console.log("----", templateVars);
+  console.log("----", req.cookies["user_id"]);
   // const templateVars = { user, urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
