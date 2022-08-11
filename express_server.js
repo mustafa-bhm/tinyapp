@@ -18,9 +18,16 @@ function generateRandomString() {
   return randomStr;
 }
 const urlDatabase = {
-  b2xVn2: "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
+  b6UTxQ: {
+    longURL: "https://www.tsn.ca",
+    userID: "aJ48lW",
+  },
+  i3BoGr: {
+    longURL: "https://www.google.ca",
+    userID: "aJ48lW",
+  },
 };
+
 const searchByEmail = (email, users) => {
   for (const userId in users) {
     if (users[userId].email === email) {
@@ -30,7 +37,7 @@ const searchByEmail = (email, users) => {
   return null;
 };
 
-const users = {
+let users = {
   userRandomID: {
     id: "userRandomID",
     email: "user@example.com",
@@ -42,6 +49,21 @@ const users = {
     password: "dishwasher-funk",
   },
 };
+/// function to find urls for each user
+const userURLS = (id) => {
+  let urls = [];
+
+  for (let shortURL in urlDatabase) {
+    if (urlDatabase[shortURL].userID === id) {
+      urls[id] = {
+        shortURL: shortURL,
+        longURL: urlDatabase[shortURL].longURL,
+      };
+    }
+  }
+  return urls;
+};
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -54,7 +76,12 @@ app.get("/urls", (req, res) => {
     return res.redirect("/login");
   }
   const user = users[req.cookies.user_id];
-  const templateVars = { user, urls: urlDatabase };
+  const templateVars = {
+    urls: urlDatabase,
+    user: users[user],
+  };
+  console.log("----", templateVars);
+  // const templateVars = { user, urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 /// GET Route to Show the Form
@@ -76,7 +103,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = {
     user,
     id: req.params.id,
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[req.params.id].longURL,
     urls: urlDatabase,
   };
 
@@ -86,8 +113,10 @@ app.get("/urls/:id", (req, res) => {
 /// Post request & add new id + long url to urlDatabase & redirect to :id
 app.post("/urls", (req, res) => {
   let id = generateRandomString();
-  let longUrl = req.body.longURL;
-  urlDatabase[id] = longUrl;
+
+  urlDatabase[id] = { longURL: req.body.longURL, userID: req.cookies.user_id };
+  console.log("+++++", urlDatabase);
+
   res.redirect(`/urls/${id}`); // should redirect to /urls/:id. with the new created id
 });
 
@@ -110,7 +139,11 @@ app.post("/urls/:id/delete", (req, res) => {
 
 /// to Update Urls and redirect to urls page
 app.post("/urls/:id/update", (req, res) => {
-  urlDatabase[req.params.id] = req.body.newLongURL;
+  urlDatabase[req.params.id] = {
+    longURL: req.body.newLongURL,
+    userID: req.cookies.user_id,
+  };
+
   res.redirect("/urls");
 });
 
