@@ -109,11 +109,21 @@ app.post("/urls/:id/update", (req, res) => {
   res.redirect("/urls");
 });
 
-//// POST for login
+//// POST for login updated
 app.post("/login", (req, res) => {
-  const username = req.body.username;
-  res.cookie("username", username);
-  res.redirect("/urls");
+  const email = req.body.email;
+  const password = req.body.password;
+  // const user_id = req.body.username;
+
+  for (let key in users) {
+    let user = users[key];
+    if (email === user.email && password === user.password) {
+      res.cookie("user_id", user.id);
+      res.redirect("/urls");
+      return;
+    }
+  }
+  res.status(403).send("Error : Please re-enter your Email or Password!");
 });
 
 /// to logout & clear username
