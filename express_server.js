@@ -50,16 +50,21 @@ app.get("/urls.json", (req, res) => {
 });
 /// Route for urls_index
 app.get("/urls", (req, res) => {
+  if (!req.cookies["user_id"]) {
+    return res.redirect("/login");
+  }
   const user = users[req.cookies.user_id];
   const templateVars = { user, urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 /// GET Route to Show the Form
 app.get("/urls/new", (req, res) => {
+  if (!req.cookies["user_id"]) {
+    return res.redirect("/login");
+  }
   const user = users[req.cookies.user_id];
   const templateVars = {
     user,
-    // urls: urlDatabase, /// check if this line can be deleted without any side effects
   };
 
   res.render("urls_new", templateVars);
