@@ -113,7 +113,6 @@ app.post("/urls/:id/update", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  // const user_id = req.body.username;
 
   for (let key in users) {
     let user = users[key];
@@ -126,11 +125,10 @@ app.post("/login", (req, res) => {
   res.status(403).send("Error : Please re-enter your Email or Password!");
 });
 
-/// to logout & clear username
+/// to logout & clear user_id
 app.post("/logout", (req, res) => {
-  const username = req.body.username;
-  res.clearCookie("username");
-  res.redirect("/urls");
+  res.clearCookie("user_id");
+  res.redirect("/login");
 });
 
 /// TO GET the registration page
