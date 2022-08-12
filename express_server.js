@@ -24,7 +24,7 @@ app.set("view engine", "ejs");
 /// DATA ////
 
 /// USERS DATABASE
-let users = {
+const users = {
   userRandomID: {
     id: "userRandomID",
     email: "user@example.com",
