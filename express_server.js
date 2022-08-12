@@ -16,35 +16,12 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
-//// helper functions /////
-
-function generateRandomString() {
-  let char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let randomStr = "";
-  for (let i = 0; i < 6; i++) {
-    randomStr += char[Math.floor(Math.random() * char.length)];
-  }
-  return randomStr;
-}
-const urlDatabase = {
-  b6UTxQ: {
-    longURL: "https://www.tsn.ca",
-    userID: "aJ48lW",
-  },
-  i3BoGr: {
-    longURL: "https://www.google.ca",
-    userID: "aJ48lW",
-  },
-};
-
-const searchByEmail = (email, users) => {
-  for (const userId in users) {
-    if (users[userId].email === email) {
-      return users[userId];
-    }
-  }
-  return null;
-};
+const {
+  getUserByEmail,
+  generateRandomString,
+  urlsForUser,
+  urlDatabase,
+} = require("./helpers");
 
 let users = {
   userRandomID: {
@@ -57,19 +34,6 @@ let users = {
     email: "user2@example.com",
     password: "dishwasher-funk",
   },
-};
-/// function to find urls for each user
-const urlsForUser = (id) => {
-  let urls = {};
-
-  for (let shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      urls[shortURL] = {
-        longURL: urlDatabase[shortURL].longURL,
-      };
-    }
-  }
-  return urls;
 };
 
 app.get("/", (req, res) => {
@@ -135,7 +99,6 @@ app.get("/u/:id", (req, res) => {
 
   if (longURL) {
     res.redirect(url);
-    // console.log("00000", longURL);
   } else {
     res.statusCode = 404;
     res.send("<h2>404 Not Found<br>This short URL does not exist.</h2>");
@@ -196,7 +159,7 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   const email = req.body.email;
   const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-  const checkIfEmailExist = searchByEmail(email, users);
+  const checkIfEmailExist = getUserByEmail(email, users);
   if (email === "" || hashedPassword === "") {
     return res.status(400).send("Error: Please enter email & password ");
   }
