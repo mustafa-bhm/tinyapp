@@ -131,10 +131,11 @@ app.post("/urls", (req, res) => {
 // to redirect from Short url to long url
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
+  const url = longURL["longURL"];
 
   if (longURL) {
-    res.redirect(longURL);
-    console.log("00000", longURL);
+    res.redirect(url);
+    // console.log("00000", longURL);
   } else {
     res.statusCode = 404;
     res.send("<h2>404 Not Found<br>This short URL does not exist.</h2>");
