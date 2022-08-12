@@ -1,6 +1,6 @@
-//// helper functions /////
+//// HELPER FUNCTION /////
 
-//// to search user by email
+//// TO SEARCH USER BY EMAIL
 const getUserByEmail = (email, users) => {
   for (const userId in users) {
     if (users[userId].email === email) {
@@ -10,7 +10,7 @@ const getUserByEmail = (email, users) => {
   return null;
 };
 
-/// To generat randome string
+/// TO GENERATE RANDOME STRING
 function generateRandomString() {
   let char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let randomStr = "";
@@ -20,7 +20,7 @@ function generateRandomString() {
   return randomStr;
 }
 
-/// function to find urls for each user
+/// TO FIND URLS FOR EACH USER
 const urlsForUser = (id) => {
   let urls = {};
 
@@ -34,6 +34,7 @@ const urlsForUser = (id) => {
   return urls;
 };
 
+/// URLS DATABASE
 const urlDatabase = {
   b6UTxQ: {
     longURL: "https://www.tsn.ca",
