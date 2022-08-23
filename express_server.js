@@ -58,7 +58,11 @@ app.get("/urls.json", (req, res) => {
 /// REQUEST MAIN PAGE WITH THE LIST OF SHORTENED URLS
 app.get("/urls", (req, res) => {
   if (!req.session.user_id) {
-    return res.redirect("/login");
+    /// If a user is not logged in, GET /urls will return HTML with a relevant error message.
+    return res.send(
+      `<h2> access denied please login or register to access this page </h2>`
+    );
+    // return res.redirect("/login");
   }
   const user = users[req.session.user_id];
   const templateVars = {
@@ -82,12 +86,30 @@ app.get("/urls/new", (req, res) => {
 
 /// REQUEST TO EDIT SHORT URLS
 app.get("/urls/:id", (req, res) => {
-  const user = users[req.session.user_id];
+  const user_id = req.session.user_id;
+
+  /// if a user who is not logged-in or registred try to access short url
+  if (!user_id) {
+    return res.send(`<h2> You're not allowed to view/edit this URL !!`);
+  }
+  //// if logged-in user try to access a url that doesn't exist
+  const url_id = req.params.id;
+  const url = urlDatabase[url_id];
+  if (!url) {
+    return res.send(`<h2>This URL doesn't exist !</h2>`);
+  }
+
+  /// if a logged-in user try to edit a URL that do not belong to him/her
+  if (url.userID !== user_id) {
+    return res.send(`<h2>This short url doesn't belong to you !</h2>`);
+  }
+
+  const user = users[user_id];
+
   const templateVars = {
-    user,
+    user: user,
     id: req.params.id,
-    longURL: urlDatabase[req.params.id].longURL,
-    urls: urlDatabase,
+    longURL: url.longURL,
   };
   res.render("urls_show", templateVars);
 });
